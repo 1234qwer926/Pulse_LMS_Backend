@@ -1,6 +1,6 @@
 package com.LMS.Pulse.model;
 
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,5 +25,6 @@ public class Jotform {
     private Integer totalPages;
 
     @OneToMany(mappedBy = "jotform", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // allow serialization from Jotform → Pages
     private List<JotformPage> pages = new ArrayList<>();
 }

@@ -1,5 +1,6 @@
 package com.LMS.Pulse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,18 +14,25 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "courses")
 public class Course {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true) // Ensure course names are unique
+    @Column(nullable = false, unique = true)
     private String courseName;
 
-    @Column
-    private String learningJotformName; // Mapped learning Jotform
+    // Relation to Jotform (Learning)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "learning_jotform_id")
+    @JsonIgnoreProperties({"pages"}) // prevent infinite recursion
+    private Jotform learningJotform;
 
-    @Column
-    private String assignmentJotformName; // Attached assignment Jotform (can be updated later)
+    // Relation to Jotform (Assignment)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "assignment_jotform_id")
+    @JsonIgnoreProperties({"pages"})
+    private Jotform assignmentJotform;
 
     @Column(nullable = false)
     private String groupName;

@@ -1,5 +1,7 @@
 package com.LMS.Pulse.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,8 +26,10 @@ public class JotformPage {
 
     @ManyToOne
     @JoinColumn(name = "jotform_id", nullable = false)
+    @JsonBackReference // prevent back loop (Page → Jotform → Page...)
     private Jotform jotform;
 
     @OneToMany(mappedBy = "page", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // serialize Page → Elements
     private List<JotformElement> elements = new ArrayList<>();
 }

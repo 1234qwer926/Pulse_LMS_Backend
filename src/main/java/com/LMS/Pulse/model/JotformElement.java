@@ -1,6 +1,6 @@
 package com.LMS.Pulse.model;
 
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,5 +25,6 @@ public class JotformElement {
 
     @ManyToOne
     @JoinColumn(name = "page_id", nullable = false)
+    @JsonBackReference // prevent recursion (Element → Page → Element...)
     private JotformPage page;
 }
