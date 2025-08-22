@@ -1,5 +1,6 @@
 package com.LMS.Pulse.controller;
 
+import com.LMS.Pulse.Dto.CourseResponseDto;
 import com.LMS.Pulse.Dto.MapAssignmentRequest;
 import com.LMS.Pulse.model.Course;
 import com.LMS.Pulse.service.CourseService;
@@ -18,15 +19,23 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
-    // Get all courses
-    @GetMapping("/getall")
-    public List<Course> getAllCourses() {
-        return courseService.getAll();
+    // Endpoint to get courses, filtered by group
+    @GetMapping
+    public ResponseEntity<List<CourseResponseDto>> getCoursesByGroup(@RequestParam("group") String group) {
+        List<CourseResponseDto> courses = courseService.getCoursesByGroup(group);
+        return ResponseEntity.ok(courses);
     }
 
-    // Map Learning Jotform to a course
+    @GetMapping("/names")
+    public ResponseEntity<List<String>> getCourseNames() {
+        // ... (existing code is unchanged)
+        List<String> courseNames = courseService.getCourseNames();
+        return ResponseEntity.ok(courseNames);
+    }
+
     @PostMapping("/learning")
     public ResponseEntity<Course> mapLearningJotform(
+            // ... (existing code is unchanged)
             @RequestParam("courseName") String courseName,
             @RequestParam("jotformName") String jotformName,
             @RequestParam("group") String group,
@@ -37,9 +46,9 @@ public class CourseController {
         return ResponseEntity.ok(course);
     }
 
-    // Map Assignment Jotform to an existing course
     @PostMapping("/assignment")
     public ResponseEntity<Course> mapAssignmentJotform(
+            // ... (existing code is unchanged)
             @RequestBody MapAssignmentRequest request
     ) {
         Course updatedCourse = courseService.mapAssignmentCourse(
