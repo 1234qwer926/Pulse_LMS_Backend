@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface JotformRepository extends JpaRepository<Jotform, Long> {
     Optional<Jotform> findByJotformName(String jotformName);
+
+    Object findAllById(int i);
 }

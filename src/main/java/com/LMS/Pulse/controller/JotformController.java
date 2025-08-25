@@ -1,4 +1,3 @@
-// Updated JotformController.java
 package com.LMS.Pulse.controller;
 
 import com.LMS.Pulse.model.Jotform;
@@ -11,12 +10,21 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173") // Fine for testing without security
 @RequestMapping("/api/jotforms")
-@CrossOrigin(origins = "http://localhost:5173") // Enable CORS for this origin
 public class JotformController {
 
     @Autowired
     private JotformService jotformService;
+
+    /**
+     * GET /api/jotforms - Retrieves all Jotforms.
+     * Your frontend should use this endpoint, not /getall.
+     */
+    @GetMapping
+    public List<Jotform> getAllJotforms() {
+        return jotformService.getAllJotforms();
+    }
 
     @PostMapping
     public ResponseEntity<Jotform> createJotform(@RequestBody Map<String, Object> data) {
@@ -24,10 +32,37 @@ public class JotformController {
         return ResponseEntity.ok(savedJotform);
     }
 
-    // New endpoint to get all Jotform names
+    /**
+     * DELETE /api/jotforms/{id} - Deletes a specific Jotform by its ID.
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteJotform(@PathVariable Long id) {
+        try {
+            jotformService.deleteJotformById(id);
+            return ResponseEntity.noContent().build(); // HTTP 204: Success, no content to return
+        } catch (Exception e) {
+            // This will catch the EntityNotFoundException from the service
+            return ResponseEntity.notFound().build(); // HTTP 404: Not Found
+        }
+    }
+
+    // ----- Other Endpoints -----
+
     @GetMapping("/names")
     public ResponseEntity<List<String>> getAllJotformNames() {
         List<String> names = jotformService.getAllJotformNames();
         return ResponseEntity.ok(names);
     }
+
+    @GetMapping("/react")
+    public Jotform getreact() {
+        return jotformService.getreact();
+    }
+
+    // This endpoint is redundant if you use @GetMapping on the base path.
+    // I recommend removing it to avoid confusion.
+    // @GetMapping("/getall")
+    // public List<Jotform> getAllJotForms(){
+    //     return jotformService.getAllJotforms();
+    // }
 }
