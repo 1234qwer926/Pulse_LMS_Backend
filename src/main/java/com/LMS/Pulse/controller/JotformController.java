@@ -10,17 +10,14 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173") // Fine for testing without security
+
 @RequestMapping("/api/jotforms")
 public class JotformController {
 
     @Autowired
     private JotformService jotformService;
 
-    /**
-     * GET /api/jotforms - Retrieves all Jotforms.
-     * Your frontend should use this endpoint, not /getall.
-     */
+
     @GetMapping
     public List<Jotform> getAllJotforms() {
         return jotformService.getAllJotforms();
@@ -59,10 +56,5 @@ public class JotformController {
         return jotformService.getreact();
     }
 
-    // This endpoint is redundant if you use @GetMapping on the base path.
-    // I recommend removing it to avoid confusion.
-    // @GetMapping("/getall")
-    // public List<Jotform> getAllJotForms(){
-    //     return jotformService.getAllJotforms();
-    // }
+
 }

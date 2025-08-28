@@ -2,6 +2,7 @@ package com.LMS.Pulse.Dto;
 
 public class CourseResponseDto {
 
+    private Long id; // <-- The missing field
     private String courseName;
     private String learningJotformName;
     private String assignmentJotformName;
@@ -12,7 +13,8 @@ public class CourseResponseDto {
     public CourseResponseDto() {
     }
 
-    public CourseResponseDto(String courseName, String learningJotformName, String assignmentJotformName, String imageFileName, String groupName) {
+    public CourseResponseDto(Long id, String courseName, String learningJotformName, String assignmentJotformName, String imageFileName, String groupName) {
+        this.id = id; // <-- Update constructor to include the ID
         this.courseName = courseName;
         this.learningJotformName = learningJotformName;
         this.assignmentJotformName = assignmentJotformName;
@@ -20,7 +22,16 @@ public class CourseResponseDto {
         this.groupName = groupName;
     }
 
-    // Getters and Setters
+    // Getters and Setters for the new ID field
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    // ... other existing getters and setters
     public String getCourseName() {
         return courseName;
     }
