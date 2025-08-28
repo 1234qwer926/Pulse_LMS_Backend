@@ -1,36 +1,37 @@
-package com.LMS.Pulse.controller;// package com.LMS.Pulse.controller;
+package com.LMS.Pulse.controller;
 
 import com.LMS.Pulse.model.UserGroupMapping;
 import com.LMS.Pulse.service.UserGroupMappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*") // Fine for testing without security
-@RequestMapping("/api/mappings") // Base path for this controller
-// Allow requests from your React app
+@CrossOrigin(origins = "*") // Allows all origins, adjust for production
+@RequestMapping("/api/user-mappings")
 public class UserGroupMappingController {
 
     @Autowired
-    private UserGroupMappingService userGroupMappingService;
+    private UserGroupMappingService service;
 
-    @PostMapping("/map-user")
-    public ResponseEntity<?> mapUserToGroup(@RequestBody UserGroupMapping request) {
+    @PostMapping
+    public ResponseEntity<UserGroupMapping> createMapping(@RequestBody UserGroupMapping mapping) {
+        return ResponseEntity.ok(service.mapUserToGroup(mapping));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserGroupMapping>> getAllMappings() {
+        return ResponseEntity.ok(service.getAllMappings());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteMapping(@PathVariable Long id) {
         try {
-            // Create a new mapping entity from the request
-            UserGroupMapping newMapping = new UserGroupMapping();
-            newMapping.setEmail(request.getEmail());
-            // The frontend sends 'group', so we map it to 'groupName'
-            newMapping.setGroupName(request.getGroupName());
-
-            UserGroupMapping savedMapping = userGroupMappingService.mapUserToGroup(newMapping);
-
-            // Return a success response with the saved object
-            return ResponseEntity.ok(savedMapping);
-        } catch (Exception e) {
-            // Return a generic error response
-            return ResponseEntity.badRequest().body("Error mapping user: " + e.getMessage());
+            service.deleteMapping(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 }

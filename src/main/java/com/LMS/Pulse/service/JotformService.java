@@ -19,6 +19,14 @@ public class JotformService {
     @Autowired
     private JotformRepository jotformRepository;
 
+    /**
+     * Creates and saves a new Jotform entity from a map of data.
+     * This method is transactional, ensuring that the entire object graph (Jotform, pages, and elements)
+     * is saved in a single transaction.
+     *
+     * @param data A map containing the Jotform data, typically from a JSON request body.
+     * @return The saved Jotform entity with its generated ID.
+     */
     @Transactional
     public Jotform saveJotform(Map<String, Object> data) {
         Jotform jotform = new Jotform();
@@ -31,7 +39,7 @@ public class JotformService {
                 JotformPage page = new JotformPage();
                 page.setPage(getIntegerValue(pageData.get("page")));
                 page.setTotalElements(getIntegerValue(pageData.get("totalElements")));
-                page.setJotform(jotform);
+                page.setJotform(jotform); // Link back to the parent Jotform
 
                 List<Map<String, Object>> elementsData = (List<Map<String, Object>>) pageData.get("elements");
                 if (elementsData != null) {
@@ -42,7 +50,7 @@ public class JotformService {
                         element.setElementName((String) elementData.get("elementName"));
                         element.setContent((String) elementData.get("content"));
                         element.setSequence(getIntegerValue(elementData.get("sequence")));
-                        element.setPage(page);
+                        element.setPage(page); // Link back to the parent page
                         page.getElements().add(element);
                     }
                 }
@@ -52,7 +60,12 @@ public class JotformService {
         return jotformRepository.save(jotform);
     }
 
-    // --- DELETE OPERATION ---
+    /**
+     * Deletes a Jotform by its ID.
+     * Throws an EntityNotFoundException if no Jotform with the given ID exists.
+     *
+     * @param id The ID of the Jotform to delete.
+     */
     @Transactional
     public void deleteJotformById(Long id) {
         if (!jotformRepository.existsById(id)) {
@@ -61,31 +74,62 @@ public class JotformService {
         jotformRepository.deleteById(id);
     }
 
+    /**
+     * Retrieves all Jotform entities from the database.
+     *
+     * @return A list of all Jotforms.
+     */
     public List<Jotform> getAllJotforms() {
         return jotformRepository.findAll();
     }
 
-    // Other existing methods...
+    /**
+     * Retrieves a distinct list of all Jotform names.
+     *
+     * @return A list of unique Jotform names.
+     */
     public List<String> getAllJotformNames() {
-        // ...
         return jotformRepository.findAll().stream()
                 .map(Jotform::getJotformName)
                 .distinct()
                 .collect(Collectors.toList());
     }
 
+    /**
+     * A sample method to retrieve a hardcoded Jotform (e.g., with ID 1).
+     * Used for testing or specific use cases.
+     *
+     * @return The Jotform with ID 1, or null if not found.
+     */
     public Jotform getreact() {
-        // ...
         return jotformRepository.findById(1L).orElse(null);
     }
 
+    // --- Private Helper Methods ---
+
+    /**
+     * Safely converts an object to an Integer.
+     *
+     * @param obj The object to convert.
+     * @return The integer value, or null if the object is not a number.
+     */
     private Integer getIntegerValue(Object obj) {
-        if (obj instanceof Number) return ((Number) obj).intValue();
+        if (obj instanceof Number) {
+            return ((Number) obj).intValue();
+        }
         return null;
     }
 
+    /**
+     * Safely converts an object to a Long.
+     *
+     * @param obj The object to convert.
+     * @return The long value, or null if the object is not a number.
+     */
     private Long getLongValue(Object obj) {
-        if (obj instanceof Number) return ((Number) obj).longValue();
+        if (obj instanceof Number) {
+            return ((Number) obj).longValue();
+        }
         return null;
     }
 }
