@@ -1,4 +1,4 @@
-package com.LMS.Pulse.controller;
+    package com.LMS.Pulse.controller;
 
 import com.LMS.Pulse.Dto.CourseResponseDto;
 import com.LMS.Pulse.Dto.CourseUpdateDto;
