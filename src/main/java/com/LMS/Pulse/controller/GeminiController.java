@@ -10,12 +10,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class GeminiController {
 
-    private final GeminiService geminiservice;
+    private final GeminiService geminiService;
 
-    @PostMapping ("/ask")
-    public String askGeminiApi(@RequestBody String prompt){
-        return geminiservice.askGemini(prompt);
-
+    @PostMapping("/ask")
+    public String askGeminiApi(@RequestBody String prompt) {
+        return geminiService.askGemini(prompt);
     }
-
 }

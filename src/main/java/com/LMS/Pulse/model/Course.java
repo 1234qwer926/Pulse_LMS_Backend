@@ -2,19 +2,13 @@ package com.LMS.Pulse.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "courses")
 public class Course {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,13 +16,11 @@ public class Course {
     @Column(nullable = false, unique = true)
     private String courseName;
 
-    // Relation to Jotform (Learning)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "learning_jotform_id")
-    @JsonIgnoreProperties({"pages"}) // prevent infinite recursion
+    @JsonIgnoreProperties({"pages"})
     private Jotform learningJotform;
 
-    // Relation to Jotform (Assignment)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assignment_jotform_id")
     @JsonIgnoreProperties({"pages"})
@@ -39,14 +31,14 @@ public class Course {
 
     @Lob
     private byte[] imageFile;
-
     private String imageFileName;
 
     @Lob
     private byte[] pdfFile;
-
     private String pdfFileName;
 
     private LocalDateTime createdDate = LocalDateTime.now();
     private LocalDateTime updatedDate = LocalDateTime.now();
+
+
 }

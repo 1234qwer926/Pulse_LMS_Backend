@@ -10,12 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
-
+    List<Course> findByGroupName(String groupName);
     Optional<Course> findByCourseName(String courseName);
 
-    @Query("SELECT DISTINCT c.courseName FROM Course c ORDER BY c.courseName")
+    @Query("SELECT DISTINCT c.courseName FROM Course c")
     List<String> findDistinctCourseNames();
-
-    // New method to find courses by group name
-    List<Course> findByGroupName(String groupName);
 }

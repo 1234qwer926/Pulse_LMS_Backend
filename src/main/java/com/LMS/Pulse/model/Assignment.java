@@ -1,14 +1,11 @@
 package com.LMS.Pulse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "assignments")
 public class Assignment {
@@ -16,17 +13,21 @@ public class Assignment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @Column(unique = true, nullable = false)
+    private String assignmentIdentifier;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
+    @JsonIgnore
     private Course course;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private String title;
 
-    private double totalScore;
+    // **THE FIX**: Initialize the totalScore to 0.
+    // This provides a default value for the NOT NULL database column, preventing the SQL error.
+    @Column(nullable = false)
+    private double totalScore = 0.0;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "assignment_id")
-    private List<AssignmentAnswer> answers;
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<UserSubmissions> userSubmissions;
 }

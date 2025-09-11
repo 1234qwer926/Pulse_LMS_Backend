@@ -52,8 +52,7 @@ public class CourseController {
     ) {
         Course updatedCourse = courseService.mapAssignmentCourse(
                 request.getCourseName(),
-                request.getJotformName(),
-                request.getGroup()
+                request.getJotformName()
         );
         return ResponseEntity.ok(updatedCourse);
     }

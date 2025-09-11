@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResultDto {
-    private Long userId;
+    // **THE FIX**: Changed the data type from Long to String.
+    private String userId;
     private String username;
     private double score;
 }
